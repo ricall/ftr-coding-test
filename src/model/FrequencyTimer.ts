@@ -1,16 +1,18 @@
 import { frequenciesToString, FrequencyCounter } from '@/model/FrequencyCounter.ts';
 import { EventSink } from '@/model/Event.ts';
 
+const MILLISECONDS_PER_SECOND = 1_000;
+
 export class FrequencyTimer {
   private readonly counter: FrequencyCounter;
   private readonly frequency: number;
   private readonly publishEvent: EventSink<'timer'>;
   private timer: NodeJS.Timeout | undefined;
 
-  constructor(counter: FrequencyCounter, frequency: number, sink: EventSink<'timer'>) {
+  constructor(counter: FrequencyCounter, frequencyInMilliseconds: number, publishEvent: EventSink<'timer'>) {
     this.counter = counter;
-    this.frequency = frequency;
-    this.publishEvent = sink;
+    this.frequency = frequencyInMilliseconds;
+    this.publishEvent = publishEvent;
     this.reschedule();
   }
 
@@ -32,7 +34,7 @@ export class FrequencyTimer {
   }
 
   private reschedule() {
-    this.timer = setTimeout(() => this.onTimeout(), this.frequency * 1_000);
+    this.timer = setTimeout(() => this.onTimeout(), this.frequency * MILLISECONDS_PER_SECOND);
   }
 
   private onTimeout() {

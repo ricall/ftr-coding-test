@@ -7,7 +7,7 @@ import { promptUser } from '@/utils/promptUser.ts';
 import { EOL } from 'node:os';
 
 const log = (message: string) => console.log(`>> ${message}`);
-const eventSink = ({ message }: Event<'validation' | 'timer'>) => log(message);
+const publishEvent = ({ message }: Event<'validation' | 'timer'>) => log(message);
 
 const getFrequencyFromUser = async (): Promise<number> => {
   let frequency: string | undefined = undefined;
@@ -22,9 +22,9 @@ const getFrequencyFromUser = async (): Promise<number> => {
 };
 
 const main = async () => {
-  const counter = new FIBFrequencyCounter(new SimpleFrequencyCounter(), eventSink);
   const frequency = await getFrequencyFromUser();
-  const timer = new FrequencyTimer(counter, frequency, eventSink);
+  const counter = new FIBFrequencyCounter(new SimpleFrequencyCounter(), publishEvent);
+  const timer = new FrequencyTimer(counter, frequency, publishEvent);
 
   log('Please enter the first number');
   let running = true;
@@ -45,11 +45,11 @@ const main = async () => {
 
       default: {
         const value = parseNumber(text);
-        if (value !== undefined) {
-          counter.addItem(value);
-        } else {
-          log(`Invalid request ${text}`);
+        if (value === undefined) {
+          log(`Invalid number ${text}`);
+          break;
         }
+        counter.addItem(value);
         log('Please enter the next number');
         break;
       }

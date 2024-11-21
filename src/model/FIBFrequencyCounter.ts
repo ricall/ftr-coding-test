@@ -6,9 +6,9 @@ export class FIBFrequencyCounter implements FrequencyCounter {
   private readonly counter: FrequencyCounter;
   private readonly publishEvent: EventSink<'validation'>;
 
-  constructor(counter: FrequencyCounter, sink: EventSink<'validation'>) {
+  constructor(counter: FrequencyCounter, publishEvent: EventSink<'validation'>) {
     this.counter = counter;
-    this.publishEvent = sink;
+    this.publishEvent = publishEvent;
   }
 
   addItem(value: string) {

@@ -10,6 +10,10 @@ The application was developed on a m1 mac pro, and may not work under windows.
 
 * node 20.18.x
 * asdf (optional) - for managing tool versions
+* Install all the project dependencies
+```bash
+npm install
+```
 
 ### Running the application
 ```bash
